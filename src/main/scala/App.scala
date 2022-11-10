@@ -17,16 +17,16 @@ object Apps extends App {
     (yearSalary + yearSalary * bonusPercent + compensation) * 0.87 / 12
   }
 
-  println("Ежемесячный оклад сотрудника после вычета налогов = " + monthlySalary(yearSalaryRead, bonusPercentRead, compensationRead))
+  val monthlySalaryWorker = monthlySalary(yearSalaryRead, bonusPercentRead, compensationRead)
+  println("Ежемесячный оклад сотрудника после вычета налогов = " + monthlySalaryWorker)
 
 
   //c
-  val salaryStaff = List(100, 150, 200, 80, 120, 75)
+  var salaryWorkers = List(100, 150, 200, 80, 120, 75)
 
-  def meanSalaryStaff(salaryStaff: List[Int]): Int = {
+  def meanSalaryWorkers(salaryStaff: List[Int]): Int = {
     val meanSalary: Float = salaryStaff.sum / salaryStaff.length
-    val employeeSalary = monthlySalary(yearSalaryRead, bonusPercentRead, compensationRead)
-    val deviationOfSalary = (((employeeSalary * 100) / meanSalary) - 100).toInt
+    val deviationOfSalary = (((monthlySalaryWorker * 100) / meanSalary) - 100).toInt
     val result = deviationOfSalary match {
       case a if a > 0 => "+" + deviationOfSalary
       case a if a == 0 => "0" + deviationOfSalary
@@ -35,22 +35,60 @@ object Apps extends App {
     println(s"Отклонение от средней зарплаты: $result%")
     deviationOfSalary
   }
-  meanSalaryStaff(salaryStaff)
+
+    meanSalaryWorkers(salaryWorkers)
 
   //d
-  def correctSalary(): List[Int] = {
-    var nSalaryStaff = List[Int]()
-    val employeeSalary = monthlySalary()
-    println("Введите сумму премии/штрафа (при штрафе добавьте знак'-' перед числом:")
-    val correct = readLine().toInt
-    val sumSalary = employeeSalary + correct
-    println(sumSalary)
-    nSalaryStaff = salaryStaff :+ sumSalary.toInt
-    val max = nSalaryStaff.max
-    val min = nSalaryStaff.min
-    println(s"Самая высокая зарплата: $max")
-    println(s"Самая низкая зарплата: $min")
-    nSalaryStaff
+  def correctSalary() = {
+    println("Введите сумму премии/штрафа (при штрафе добавьте знак'-' перед числом: ")
+    val correctedSalary: Double = monthlySalaryWorker + readLine().toFloat
+    salaryWorkers = salaryWorkers :+ correctedSalary.toInt
+    val minSalary = salaryWorkers.min
+    val maxSalary = salaryWorkers.max
+    println(s"Самая низкая зарплата: $minSalary")
+    println(s"Самая высокая зарплата: $maxSalary")
   }
 
+  correctSalary()
+
+  //e
+  def addWorker(salaryForNewWorker: Int) = {
+    salaryWorkers = salaryWorkers :+ salaryForNewWorker
+    salaryWorkers = salaryWorkers.sorted
+    println(salaryWorkers)
+  }
+
+  addWorker(350)
+  addWorker(90)
+
+
+  //f
+  addWorker(130)
+
+  def getNumberWorker(salaryWorker: Int) = {
+    salaryWorkers.indexOf(salaryWorker)
+  }
+
+  println("Позиция искомого сотрудника: " + getNumberWorker(130))
+
+  //g
+  var middleSalaryStaff = List[Int]()
+
+  def getMiddleWorkers(minBorder: Int, maxBorder: Int) {
+    for (worker <- salaryWorkers) {
+      if ((worker > minBorder) && (worker <= maxBorder))
+        println(s"Cотрудник уровня middle № ${salaryWorkers.indexOf(worker)}")
+    }
+  }
+
+  getMiddleWorkers(99, 150)
+
+
+  //h
+  def salaryIndexing(indexing: Float) {
+    salaryWorkers = salaryWorkers.map(x => (x + (x * (indexing / 100))).toInt)
+  }
+
+  salaryIndexing(7)
+  print(s"Новая зарплата сотрудников после индексации: $salaryWorkers")
 }
